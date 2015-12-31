@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript">
+
+jQuery.fn.multiSelect = function(data){
+	var $multiSelect = this;
+	
+	$multiSelect.append('<div><h2>多选框</h2></div>');
+	$multiSelect.append('<select multiple="multiple" size="8" style="width:100px" index="1"></select>');
+	$multiSelect.append('<select multiple="multiple" size="8" style="width:100px" index="2"></select>');
+	//debugger;	
+	$selects = $multiSelect.find("select");
+	select1 = $selects[0];
+	select2 = $selects[1];
+
+	var data1 = []
+	var data2 = []
+	for(k in data){
+		if(data[k].select == true){
+			data2.push(data[k])
+		}else{
+			data1.push(data[k])
+		}
+	}
+	
+	for(i in data1){
+		$(select1).append("<option value='"+data1[i].key+"'>"+data1[i].value+"</option>");
+	}
+	for(i in data2){
+		$(select2).append("<option value='"+data2[i].key+"'>"+data2[i].value+"</option>");
+	}
+	$("option").each(function(){
+	    var $this = $(this);
+	    $this.dblclick(function(){	    	
+	    	index = $this.parent().attr("index")
+	    	this.remove();
+	    	if(index == 1){
+	    		$(select2).append(this)
+	    	}else{
+	    		$(select1).append(this)
+	    	}
+	    });
+	});
+
+}
+jQuery.fn.multiSelectValue = function(){
+	var $multiSelect = this;
+	$selects = $multiSelect.find("select");
+	select2 = $selects[1];
+	children = select2.children;
+	var data = [];
+	for(i=0;i<children.length;i++){
+		j={};
+		j.key = children[i].value;
+		j.value = children[i].text;
+		data.push(j);
+	}
+
+	//debugger;
+	return data;	
+}
+
+
+
+
+
+
+
+
+
+
+
+jQuery(function($) {
+	var data = [{value:'初一',key:1,select:true},
+	            {value:'初二',key:2},
+	            {value:'初三',key:3},
+	            {value:'初四',key:4,select:true},
+	            {value:'初五',key:5},
+	            {value:'初六',key:6}
+	            ]
+	
+	var multiselect = $('#multi-select');
+	multiselect.multiSelect(data);
+	
+});
+
+function getValue(){
+	alert(JSON.stringify($('#multi-select').multiSelectValue()))
+}
+
+
+</script>
+
+<div id="multi-select">
+</div>
+<div>
+<button onclick="getValue()">getValue</button>
+</div>
+</body>
+</html>
